@@ -557,9 +557,13 @@ Function and class definitions
    A ``return`` statement.
 
 .. class:: Yield(value)
+           YieldFrom(value)
 
-   A ``yield`` expression. Because ``yield`` is now an expression, it must be
-   wrapped in a :class:`Expr` node if the value sent back is not used.
+   A ``yield`` or ``yield from`` expression. Because these are expressions, they
+   must be wrapped in a :class:`Expr` node if the value sent back is not used.
+   
+   .. versionadded::  3.3
+      The :class:`YieldFrom` node type.
 
 .. class:: Global(names)
            Nonlocal(names)
@@ -594,7 +598,7 @@ Function and class definitions
         ClassDef(name='foo', bases=[
             Name(id='base1', ctx=Load()),
             Name(id='base2', ctx=Load()),
-          ], keywords=[
+          ], keyword=
             keyword(arg='metaclass', value=Name(id='meta', ctx=Load())),
           ], starargs=None, kwargs=None, body=[
             Pass(),
