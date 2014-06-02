@@ -435,7 +435,7 @@ Imports
 .. class:: ImportFrom(module, names, level)
 
    Represents ``from x import y``. ``module`` is a raw string of the 'from' name,
-   without any leading dots, or ``None`` for statments such as ``from . import foo``.
+   without any leading dots, or ``None`` for statements such as ``from . import foo``.
    ``level`` is an integer holding the level of the relative import (0 means
    absolute import).
 
