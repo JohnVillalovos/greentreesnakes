@@ -37,7 +37,7 @@ Literals
    * ``format_spec`` is a :class:`Str` node
      reprensenting the formatting of the value if specified. Note that 
   
-   ``conversion`` and ``format_spec`` cannot both be set at the same time.
+   ``conversion`` and ``format_spec`` can both be set at the same time.
     
    >>> parseprint(f"{a}")
    Module(body=[
