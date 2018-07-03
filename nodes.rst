@@ -404,7 +404,7 @@ Comprehensions
    
    .. versionadded::  3.6
       ``is_async`` indicates a comprehension is asynchronous (using an
-      ``async for`` instead of ``for``).
+      ``async for`` instead of ``for``). The value is an integer (0 or 1).
 
 ::
 
