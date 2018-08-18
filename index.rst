@@ -23,17 +23,17 @@ Contents:
 
 .. seealso::
    
-   `Instrumenting the AST <http://www.dalkescientific.com/writings/diary/archive/2010/02/22/instrumenting_the_ast.html>`_
-     Using AST tools to assess code coverage.
-     
-   `astviewer <https://github.com/titusjan/astviewer>`_
-     A simple GUI for exploring ASTs
+   `Python AST explorer <https://python-ast-explorer.com/>`_
+     Web-based AST viewer: paste some code in and see the AST
 
    `Thonny <http://thonny.org>`_
-     A Python IDE with AST explorer built in (*Main menu => View => AST*).
-  
+     A Python IDE with AST explorer built in (*Main menu => View => AST*)
+
    `showast <https://github.com/hchasestevens/show_ast>`_
-     An IPython extension to show ASTs in Jupyter notebooks.
+     An IPython extension to show ASTs in Jupyter notebooks
+   
+   `Instrumenting the AST <http://www.dalkescientific.com/writings/diary/archive/2010/02/22/instrumenting_the_ast.html>`_
+     Using AST tools to assess code coverage
 
 
 Indices and tables
