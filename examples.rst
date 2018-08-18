@@ -81,3 +81,16 @@ assertions into similar function calls.
 
 See `test_framework/run.py <https://bitbucket.org/takluyver/greentreesnakes/src/default/examples/test_framework/run.py>`_
 for a working demonstration of both parts.
+
+Real projects
+-------------
+
+* `pytest <https://docs.pytest.org/>`_ uses the AST to produce useful error
+  messages when assertions fail.
+* `astsearch <https://astsearch.readthedocs.io/>`_ lets you search through
+  Python code based on semantics rather than text, e.g. to find every ``+= 1``
+  in your code.
+* `astpath <https://github.com/hchasestevens/astpath>`_ is a more powerful
+  search tool using XPath expressions on Python code.
+* `bellybutton <https://github.com/hchasestevens/bellybutton>`_ is a linter
+  designed to be readily customised.
