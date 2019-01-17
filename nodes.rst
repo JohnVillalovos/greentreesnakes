@@ -15,8 +15,10 @@ Literals
 
    .. versionadded:: 3.6
    
-   A constant. The ``value`` attribute holds a number (integer, float or complex),
-   string, :class:`bytes` object, :class:`boolean`, None or Ellipsis.
+   A constant. The ``value`` attribute holds the Python object it represents.
+   This can be simple types such as a number, string or ``None``, but also
+   immutable container types (tuples and frozensets) if all of their elements
+   are constant.
    
    This class is available in the :mod:`ast` module from Python 3.6, 
    but it isn't produced by parsing code until Python 3.8.
