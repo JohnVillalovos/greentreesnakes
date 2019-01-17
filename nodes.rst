@@ -11,12 +11,27 @@ on the right, and an :class:`Add` operator.
 Literals
 --------
 
+.. class:: Constant(value)
+
+   .. versionadded:: 3.6
+
+   .. versionchanged:: 3.8
+   Deprecates :class:`Num`, :class:`Str`, :class:`Bytes`, :class:`Ellipsis` and :class:`NameConstant`
+   
+   A constant. The ``value`` attribute holds a number (integer, float or complex), string, :class:`bytes` object, :class:`boolean`, None or Ellipsis.
+
 .. class:: Num(n)
+
+   .. deprecated:: 3.8
+   Replaced by :class:`Constant`
 
    A number - integer, float, or complex. The ``n`` attribute stores the value,
    already converted to the relevant type.
 
 .. class:: Str(s)
+
+   .. deprecated:: 3.8
+   Replaced by :class:`Constant`
 
    A string. The ``s`` attribute hold the value. In Python 2, the same type
    holds unicode strings too.
@@ -70,6 +85,9 @@ Literals
 
 .. class:: Bytes(s)
 
+   .. deprecated:: 3.8
+   Replaced by :class:`Constant`
+
    A :class:`bytes` object. The ``s`` attribute holds the value. Python 3 only.
 
 .. class:: List(elts, ctx)
@@ -96,14 +114,20 @@ Literals
 
 .. class:: Ellipsis()
 
+   .. deprecated:: 3.8
+   Replaced by :class:`Constant`
+
    Represents the ``...`` syntax for the ``Ellipsis`` singleton.
 
 .. class:: NameConstant(value)
 
-   :data:`True`, :data:`False` or :data:`None`. ``value`` holds one of those constants.
-
    .. versionadded:: 3.4
       Previously, these constants were instances of :class:`Name`.
+      
+   .. deprecated:: 3.8
+   Replaced by :class:`Constant`
+
+   :data:`True`, :data:`False` or :data:`None`. ``value`` holds one of those constants.
 
 Variables
 ---------
