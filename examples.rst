@@ -48,7 +48,7 @@ so execution doesn't stop at the first test failure::
         try:
             co = compile(wrapper, "<ast>", 'exec')
             exec(co, test_namespace)
-        except AssertionError:
+        except AssertionError as e:
             print("Assertion failed on line", node.lineno, ":")
             print(lines[node.lineno])
             # If the error has a message, show it.
@@ -75,7 +75,7 @@ assertions into similar function calls.
                 ast.copy_location(newnode, node)
                 ast.fix_missing_locations(newnode)
                 return newnode
-            
+
             # Remember to return the original node if we don't want to change it.
             return node
 
