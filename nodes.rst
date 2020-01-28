@@ -22,13 +22,13 @@ Literals
 .. class:: Constant(value)
 
    .. versionadded:: 3.6
-   
+
    A constant. The ``value`` attribute holds the Python object it represents.
    This can be simple types such as a number, string or ``None``, but also
    immutable container types (tuples and frozensets) if all of their elements
    are constant.
-   
-   This class is available in the :mod:`ast` module from Python 3.6, 
+
+   This class is available in the :mod:`ast` module from Python 3.6,
    but it isn't produced by parsing code until Python 3.8.
 
 .. class:: Num(n)
@@ -46,15 +46,15 @@ Literals
 
    A string. The ``s`` attribute hold the value. In Python 2, the same type
    holds unicode strings too.
-   
+
 .. class:: FormattedValue(value, conversion, format_spec)
 
    .. versionadded:: 3.6
-    
-   Node representing a single formatting field in an f-string. If the string 
-   contains a single formatting field and nothing else the node can be 
+
+   Node representing a single formatting field in an f-string. If the string
+   contains a single formatting field and nothing else the node can be
    isolated otherwise it appears in :class:`JoinedStr`.
-   
+
    * ``value`` is any expression node (such as a literal, a variable, or a
      function call).
    * ``conversion`` is an integer:
@@ -67,14 +67,14 @@ Literals
    * ``format_spec`` is a :class:`JoinedStr` node reprensenting the formatting
      of the value, or ``None`` if no format was specified. Both
      ``conversion`` and ``format_spec`` can be set at the same time.
-    
+
 .. class:: JoinedStr(values)
 
    .. versionadded:: 3.6
-    
+
    An f-string, comprising a series of :class:`FormattedValue` and :class:`Str`
    nodes.
-    
+
    >>> parseprint('f"sin({a}) is {sin(a):.3}"')
    Module(body=[
        Expr(value=JoinedStr(values=[
@@ -116,12 +116,12 @@ Literals
 
    A dictionary. ``keys`` and ``values`` hold lists of nodes with matching order
    (i.e. they could be paired with :func:`zip`).
-   
+
    .. versionchanged:: 3.5
       It is now possible to expand one dictionary into another, as in
       ``{'a': 1, **d}``. In the AST, the expression to be expanded (a
       :class:`Name` node in this example) goes in the ``values`` list, with a
-      ``None`` at the corresponding position in ``keys``.      
+      ``None`` at the corresponding position in ``keys``.
 
 .. class:: Ellipsis()
 
@@ -134,7 +134,7 @@ Literals
 
    .. versionadded:: 3.4
       Previously, these constants were instances of :class:`Name`.
-      
+
    .. deprecated:: 3.8
       Replaced by :class:`Constant`
 
@@ -147,7 +147,7 @@ Variables
 
    A variable name. ``id`` holds the name as a string, and ``ctx`` is one of
    the following types.
-   
+
 .. class:: Load()
            Store()
            Del()
@@ -162,7 +162,7 @@ Variables
     Module(body=[
         Expr(value=Name(id='a', ctx=Load())),
       ])
-    
+
     >>> parseprint("a = 1")  # Storing a
     Module(body=[
         Assign(targets=[
@@ -181,7 +181,7 @@ Variables
 
    A ``*var`` variable reference. ``value`` holds the variable, typically a
    :class:`Name` node.
-   
+
    Note that this *isn't* used to define a function with ``*args`` -
    :class:`FunctionDef` nodes have special fields for that.
    In Python 3.5 and above, though, :class:`Starred` is needed when building a
@@ -252,7 +252,7 @@ Expressions
            MatMult
 
    Binary operator tokens.
-   
+
    .. versionadded:: 3.5
       :class:`MatMult` - the ``@`` operator for matrix multiplication.
 
@@ -262,7 +262,7 @@ Expressions
    :class:`And`. ``values`` are the values involved. Consecutive operations
    with the same operator, such as ``a or b or c``, are collapsed into one node
    with several values.
-   
+
    This doesn't include ``not``, which is a :class:`UnaryOp`.
 
 .. class:: And
@@ -275,7 +275,7 @@ Expressions
    A comparison of two or more values. ``left`` is the first value in the
    comparison, ``ops`` the list of operators, and ``comparators`` the list of
    values after the first. If that sounds awkward, that's because it is::
-   
+
       >>> parseprint("1 < a < 10")
       Module(body=[
         Expr(value=Compare(left=Num(n=1), ops=[
@@ -311,10 +311,10 @@ Expressions
    * ``starargs`` and ``kwargs`` each hold a single node, for arguments passed
      as ``*args`` and ``**kwargs``. These are removed in Python 3.5 - see below
      for details.
-   
+
    When compiling a Call node, ``args`` and ``keywords`` are required, but they
    can be empty lists. ``starargs`` and ``kwargs`` are optional.
-   
+
    ::
 
        >>> parseprint("func(a, b=c, *d, **e)") # Python 3.4
@@ -346,7 +346,7 @@ Expressions
 
 
 .. class:: keyword(arg, value)
-   
+
    A keyword argument to a function call or class definition. ``arg`` is a raw
    string of the parameter name, ``value`` is a node to pass in.
 
@@ -383,7 +383,7 @@ Subscripting
 .. class:: Index(value)
 
    Simple subscripting with a single value::
-   
+
        >>> parseprint("l[1]")
        Module(body=[
          Expr(value=Subscript(value=Name(id='l', ctx=Load()),
@@ -393,7 +393,7 @@ Subscripting
 .. class:: Slice(lower, upper, step)
 
    Regular slicing::
-   
+
        >>> parseprint("l[1:2]")
        Module(body=[
          Expr(value=Subscript(value=Name(id='l', ctx=Load()),
@@ -405,7 +405,7 @@ Subscripting
 
    Advanced slicing. ``dims`` holds a list of :class:`Slice` and
    :class:`Index` nodes::
-   
+
        >>> parseprint("l[1:2, 3]")
        Module(body=[
            Expr(value=Subscript(value=Name(id='l', ctx=Load()), slice=ExtSlice(dims=[
@@ -425,7 +425,7 @@ Comprehensions
    List and set comprehensions, generator expressions, and dictionary
    comprehensions. ``elt`` (or ``key`` and ``value``) is a single node
    representing the part that will be evaluated for each item.
-   
+
    ``generators`` is a list of :class:`comprehension` nodes. Comprehensions with
    more than one ``for`` part are legal, if tricky to get right - see the
    example below.
@@ -435,8 +435,8 @@ Comprehensions
    One ``for`` clause in a comprehension. ``target`` is the reference to use for
    each element - typically a :class:`Name` or :class:`Tuple` node. ``iter``
    is the object to iterate over. ``ifs`` is a list of test expressions: each
-   ``for`` clause can have multiple ``ifs``. 
-   
+   ``for`` clause can have multiple ``ifs``.
+
    .. versionadded::  3.6
       ``is_async`` indicates a comprehension is asynchronous (using an
       ``async for`` instead of ``for``). The value is an integer (0 or 1).
@@ -467,7 +467,7 @@ Comprehensions
           ],
           is_async=0),
       ]))
-      
+
     >>> parseprint(("async def f():"
                     "   return [i async for i in soc]")) # Async comprehension.
     Module(body=[
@@ -490,7 +490,7 @@ Statements
    Multiple nodes in ``targets`` represents assigning the same value to each.
    Unpacking is represented by putting a :class:`Tuple` or :class:`List`
    within ``targets``.
-   
+
    >>> parseprint("a = b = 1")     # Multiple assignment
    Module(body=[
        Assign(targets=[
@@ -498,7 +498,7 @@ Statements
           Name(id='b', ctx=Store()),
         ], value=Num(n=1)),
      ])
-   
+
    >>> parseprint("a,b = c")       # Unpacking
    Module(body=[
        Assign(targets=[
@@ -508,49 +508,49 @@ Statements
              ], ctx=Store()),
          ], value=Name(id='c', ctx=Load())),
      ])
-     
+
 .. class:: AnnAssign(target, annotation, value, simple)
 
    .. versionadded::  3.6
 
-   An assignment with a type annotation. ``target`` is a single node and can 
-   be a :class:`Name`, a :class:`Attribute` or a :class:`Subscript`. 
-   ``annotation`` is the annotation, such as a :class:`Str` or :class:`Name` 
+   An assignment with a type annotation. ``target`` is a single node and can
+   be a :class:`Name`, a :class:`Attribute` or a :class:`Subscript`.
+   ``annotation`` is the annotation, such as a :class:`Str` or :class:`Name`
    node. ``value`` is a single optional node. ``simple`` is a boolean integer
-   set to True for a :class:`Name` node in ``target`` that do not appear in 
+   set to True for a :class:`Name` node in ``target`` that do not appear in
    between parenthesis and are hence pure names and not expressions.
-   
+
    >>> parseprint("c: int")
    Module(body=[
        AnnAssign(target=Name(id='c', ctx=Store()),
                  annotation=Name(id='int', ctx=Load()),
-                 value=None, 
+                 value=None,
                  simple=1),
      ])
-    
+
    >>> parseprint("(a): int = 1")  # Expression like name
    Module(body=[
-       AnnAssign(target=Name(id='a', ctx=Store()), 
-       annotation=Name(id='int', ctx=Load()), 
-       value=Num(n=1), 
+       AnnAssign(target=Name(id='a', ctx=Store()),
+       annotation=Name(id='int', ctx=Load()),
+       value=Num(n=1),
        simple=0),
      ])
-    
+
    >>> parseprint("a.b: int")  # Attribute annotation
    Module(body=[
        AnnAssign(target=Attribute(value=Name(id='a', ctx=Load()),
                                   attr='b', ctx=Store()),
-                 annotation=Name(id='int', ctx=Load()), 
-                 value=None, 
+                 annotation=Name(id='int', ctx=Load()),
+                 value=None,
                  simple=0),
      ])
-    
+
    >>> parseprint("a[1]: int")  # Subscript annotation
    Module(body=[
-       AnnAssign(target=Subscript(value=Name(id='a', ctx=Load()), 
+       AnnAssign(target=Subscript(value=Name(id='a', ctx=Load()),
                                   slice=Index(value=Num(n=1)), ctx=Store()),
-                 annotation=Name(id='int', ctx=Load()), 
-                 value=None, 
+                 annotation=Name(id='int', ctx=Load()),
+                 value=None,
                  simple=0),
     ])
 
@@ -578,7 +578,7 @@ Statements
    raised, normally a :class:`Call` or :class:`Name`, or ``None`` for
    a standalone ``raise``. ``cause`` is the optional part for ``y`` in
    ``raise x from y``.
-   
+
    In Python 2, the parameters are  instead ``type, inst, tback``, which
    correspond to the old ``raise x, y, z`` syntax.
 
@@ -639,7 +639,7 @@ Control flow
 
    An ``if`` statement. ``test`` holds a single node, such as a :class:`Compare`
    node. ``body`` and ``orelse`` each hold a list of nodes.
-   
+
    ``elif`` clauses don't have a special representation in the AST, but rather
    appear as extra :class:`If` nodes within the ``orelse`` section of the
    previous one.
@@ -676,7 +676,7 @@ Control flow
        ...:     break
        ...:   else:
        ...:     continue
-       ...: 
+       ...:
     Module(body=[
         For(target=Name(id='a', ctx=Store()), iter=Name(id='b', ctx=Load()), body=[
             If(test=Compare(left=Name(id='a', ctx=Load()), ops=[
@@ -722,7 +722,7 @@ Control flow
        ...:   a + 1
        ...: except TypeError:
        ...:   pass
-       ...: 
+       ...:
     Module(body=[
        Try(body=[
            Expr(value=BinOp(left=Name(id='a', ctx=Load()), op=Add(), right=Num(n=1))),
@@ -820,7 +820,7 @@ Function and class definitions
       ``posonlyargs`` was introduced in Python 3.8
 
    .. versionchanged:: 3.4
-   
+
       Up to Python 3.3, ``vararg`` and ``kwarg`` were raw strings of the
       argument names, and there were separate ``varargannotation`` and
       ``kwargannotation`` fields to hold their annotations.
@@ -846,7 +846,7 @@ Function and class definitions
        ....: @dec2
        ....: def f(a: 'annotation', b=1, c=2, *d, e, f=3, **g) -> 'return annotation':
        ....:   pass
-       ....: 
+       ....:
     Module(body=[
         FunctionDef(name='f', args=arguments(args=[
             arg(arg='a', annotation=Str(s='annotation')),
@@ -882,7 +882,7 @@ Function and class definitions
 
    A ``yield`` or ``yield from`` expression. Because these are expressions, they
    must be wrapped in a :class:`Expr` node if the value sent back is not used.
-   
+
    .. versionadded::  3.3
       The :class:`YieldFrom` node type.
 
@@ -894,7 +894,7 @@ Function and class definitions
 .. class:: ClassDef(name, bases, keywords, starargs, kwargs, body, decorator_list)
 
    A class definition.
-   
+
    * ``name`` is a raw string for the class name
    * ``bases`` is a list of nodes for explicitly specified base classes.
    * ``keywords`` is a list of :class:`keyword` nodes, principally for 'metaclass'.
@@ -905,7 +905,7 @@ Function and class definitions
      be passed to the metaclass.  These are removed in Python 3.5 - see below
      for details.
    * ``body`` is a list of nodes representing the code within the class
-     definition. 
+     definition.
    * ``decorator_list`` is a list of nodes, as in :class:`FunctionDef`.
 
 ::
@@ -915,14 +915,14 @@ Function and class definitions
        ....: @dec2
        ....: class foo(base1, base2, metaclass=meta):
        ....:   pass
-       ....: 
+       ....:
     Module(body=[
         ClassDef(name='foo', bases=[
             Name(id='base1', ctx=Load()),
             Name(id='base2', ctx=Load()),
           ], keyword=
             keyword(arg='metaclass', value=Name(id='meta', ctx=Load())),
-          ], starargs=None,     # gone in 3.5      
+          ], starargs=None,     # gone in 3.5
              kwargs=None,       # gone in 3.5
              body=[
             Pass(),
@@ -955,7 +955,7 @@ Async and await
     In [2]: %%dump_ast
       ...: async def f():
       ...:   await g()
-      ...: 
+      ...:
     Module(body=[
        AsyncFunctionDef(name='f', args=arguments(args=[], vararg=None, kwonlyargs=[], kw_defaults=[], kwarg=None, defaults=[]), body=[
            Expr(value=Await(value=Call(func=Name(id='g', ctx=Load()), args=[], keywords=[]))),
