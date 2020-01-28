@@ -33,6 +33,11 @@ Python code can be compiled in three modes. The root of the AST depends on the
   the AST is an :class:`ast.Interactive`, and its ``body`` attribute is a list
   of nodes.
 
+.. note::
+
+    The ``type_comment`` and ``ignore_types`` sfield introduced in Python 3.8
+    are only populated if :func:`ast.parse` is called with ``type_comment=True``.
+
 .. _fix-locations:
 
 Fixing locations

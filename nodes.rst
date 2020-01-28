@@ -8,6 +8,14 @@ the various subclasses of :class:`AST` described below. For instance, the code
 ``a + 1`` is a :class:`BinOp`, with a :class:`Name` on the left, a :class:`Num`
 on the right, and an :class:`Add` operator.
 
+
+.. note::
+
+    The :class:`Module` node has an added field in Python 3.8: ``type_ignores``
+    which is a list of :class:`TypeIgnore` indicating the lines on which
+    ``type: ignore`` comments are present.
+
+
 Literals
 --------
 
@@ -33,7 +41,7 @@ Literals
 
 .. class:: Str(s)
 
-   .. deprecated:: 3.8   
+   .. deprecated:: 3.8
       Replaced by :class:`Constant`
 
    A string. The ``s`` attribute hold the value. In Python 2, the same type
@@ -473,10 +481,12 @@ Comprehensions
 Statements
 ----------
 
-.. class:: Assign(targets, value)
+.. class:: Assign(targets, value, type_comment)
 
    An assignment. ``targets`` is a list of nodes, and ``value`` is a single node.
-   
+   ``type_comment`` is optional. It is a string containing the PEP 484 type comment
+   associated to the assignment.
+
    Multiple nodes in ``targets`` represents assigning the same value to each.
    Unpacking is represented by putting a :class:`Tuple` or :class:`List`
    within ``targets``.
@@ -543,6 +553,10 @@ Statements
                  value=None, 
                  simple=0),
     ])
+
+   .. versionchanged:: 3.8
+
+      ``type_comment`` was introduced in Python 3.8
 
 .. class:: AugAssign(target, op, value)
 
@@ -630,13 +644,19 @@ Control flow
    appear as extra :class:`If` nodes within the ``orelse`` section of the
    previous one.
 
-.. class:: For(target, iter, body, orelse)
+.. class:: For(target, iter, body, orelse, type_comment)
 
    A ``for`` loop. ``target`` holds the variable(s) the loop assigns to, as a
    single :class:`Name`, :class:`Tuple` or :class:`List` node. ``iter`` holds
    the item to be looped over, again as a single node. ``body`` and ``orelse``
    contain lists of nodes to execute. Those in ``orelse`` are executed if the
    loop finishes normally, rather than via a ``break`` statement.
+   ``type_comment`` is optional. It is a string containing the PEP 484 type
+   comment associated to for statement.
+
+   .. versionchanged:: 3.8
+
+      ``type_comment`` was introduced in Python 3.8
 
 .. class:: While(test, body, orelse)
 
@@ -714,16 +734,22 @@ Control flow
      ])
 
 
-.. class:: With(items, body)
+.. class:: With(items, body, type_comment)
 
    A ``with`` block. ``items`` is a list of :class:`withitem` nodes representing
    the context managers, and ``body`` is the indented block inside the context.
+   ``type_comment`` is optional. It is a string containing the PEP 484 type comment
+   associated to the assignment (added in Python 3.8).
 
    .. versionchanged:: 3.3
 
       Previously, a :class:`With` node had ``context_expr`` and ``optional_vars``
       instead of ``items``. Multiple contexts were represented by nesting
       a second :class:`With` node as the only item in the ``body`` of the first.
+
+   .. versionchanged:: 3.8
+
+      ``type_comment`` was introduced in Python 3.8
 
 .. class:: withitem(context_expr, optional_vars)
 
@@ -754,27 +780,33 @@ Control flow
 Function and class definitions
 ------------------------------
 
-.. class:: FunctionDef(name, args, body, decorator_list, returns)
+.. class:: FunctionDef(name, args, body, decorator_list, returns, type_comment)
 
-   A function definition. 
-   
+   A function definition.
+
    * ``name`` is a raw string of the function name.
    * ``args`` is a :class:`arguments` node.
    * ``body`` is the list of nodes inside the function.
    * ``decorator_list`` is the list of decorators to be applied, stored outermost
      first (i.e. the first in the list will be applied last).
    * ``returns`` is the return annotation (Python 3 only).
+   * ``type_comment`` is optional. It is a string containing the PEP 484 type
+     comment of the function (added in Python 3.8)
+
+   .. versionchanged:: 3.8
+
+      ``type_comment`` was introduced in Python 3.8
 
 .. class:: Lambda(args, body)
 
    ``lambda`` is a minimal function definition that can be used inside an
    expression. Unlike :class:`FunctionDef`, ``body`` holds a single node.
 
-.. class:: arguments(args, vararg, kwonlyargs, kw_defaults, kwarg, defaults)
-   
+.. class:: arguments(posonlyargs, args, vararg, kwonlyargs, kw_defaults, kwarg, defaults)
+
    The arguments for a function. In **Python 3**:
-   
-   * ``args`` and ``kwonlyargs`` are lists of :class:`arg` nodes.
+
+   * ``args``, ``posonlyargs`` and ``kwonlyargs`` are lists of :class:`arg` nodes.
    * ``vararg`` and ``kwarg`` are single :class:`arg` nodes, referring to the
      ``*args, **kwargs`` parameters.
    * ``kw_defaults`` is a list of default values for keyword-only arguments. If
@@ -782,6 +814,10 @@ Function and class definitions
    * ``defaults`` is a list of default values for arguments that can be passed
      positionally. If there are fewer defaults, they correspond to the last n
      arguments.
+
+   .. versionchanged:: 3.8
+
+      ``posonlyargs`` was introduced in Python 3.8
 
    .. versionchanged:: 3.4
    
@@ -793,12 +829,13 @@ Function and class definitions
 
    In **Python 2**, the attributes for keyword-only arguments are not needed.
 
-.. class:: arg(arg, annotation)
+.. class:: arg(arg, annotation, type_comment)
 
    A single argument in a list; Python 3 only. ``arg`` is a raw string of the
    argument name, ``annotation`` is its annotation, such as a :class:`Str` or
-   :class:`Name` node.
-   
+   :class:`Name` node. ``type_comment`` is optional. It is a string containing
+   the PEP 484 type comment of the argument.
+
    In Python 2, arguments are instead represented as :class:`Name` nodes, with
    ``ctx=Param()``.
 
@@ -831,6 +868,10 @@ Function and class definitions
             Name(id='dec2', ctx=Load()),
           ], returns=Str(s='return annotation')),
       ])
+
+   .. versionchanged:: 3.8
+
+      ``type_comment`` was introduced in Python 3.8
 
 .. class:: Return(value)
 
@@ -899,7 +940,7 @@ Async and await
    All of these nodes were added. See :ref:`the What's New notes <python:whatsnew-pep-492>`
    on the new syntax.
 
-.. class:: AsyncFunctionDef(name, args, body, decorator_list, returns)
+.. class:: AsyncFunctionDef(name, args, body, decorator_list, returns, type_comment)
 
    An ``async def`` function definition. Has the same fields as
    :class:`FunctionDef`.
