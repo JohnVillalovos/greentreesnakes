@@ -13,7 +13,8 @@ on the right, and an :class:`Add` operator.
 
     The :class:`Module` node has an added field in Python 3.8: ``type_ignores``
     which is a list of :class:`TypeIgnore` indicating the lines on which
-    ``type: ignore`` comments are present.
+    ``type: ignore`` comments are present. If type comments are not stored in
+    the ast it is an empty list.
 
 
 Literals
