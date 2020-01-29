@@ -9,14 +9,6 @@ the various subclasses of :class:`AST` described below. For instance, the code
 on the right, and an :class:`Add` operator.
 
 
-.. note::
-
-    The :class:`Module` node has an added field in Python 3.8: ``type_ignores``
-    which is a list of :class:`TypeIgnore` indicating the lines on which
-    ``type: ignore`` comments are present. If type comments are not stored in
-    the ast it is an empty list.
-
-
 Literals
 --------
 
@@ -488,6 +480,13 @@ Statements
    ``type_comment`` is optional. It is a string containing the PEP 484 type comment
    associated to the assignment.
 
+   >>> parseprint("a = 1 # type: int", type_comments=True)
+   Module(body=[
+       Assign(targets=[
+          Name(id='b', ctx=Store()),
+        ], value=Num(n=1)), type_comment="int"
+     ], type_ignores=[])
+
    Multiple nodes in ``targets`` represents assigning the same value to each.
    Unpacking is represented by putting a :class:`Tuple` or :class:`List`
    within ``targets``.
@@ -849,7 +848,8 @@ Function and class definitions
        ....:   pass
        ....:
     Module(body=[
-        FunctionDef(name='f', args=arguments(args=[
+        FunctionDef(name='f', args=arguments(posonlyargs=[],
+          args=[
             arg(arg='a', annotation=Str(s='annotation')),
             arg(arg='b', annotation=None),
             arg(arg='c', annotation=None),
@@ -969,3 +969,34 @@ Async and await
    ``async for`` loops and ``async with`` context managers. They have the same
    fields as :class:`For` and :class:`With`, respectively. Only valid in the
    body of an :class:`AsyncFunctionDef`.
+
+
+Top level nodes
+---------------
+
+Those nodes are at the top-level of the AST. The manner by which you obtain
+the AST determine the top-level node used.
+
+.. class:: Module(stmt* body, type_ignore *type_ignores)
+
+   The root of the AST for code parsed using the `exec` mode. The ``body``
+   attribute is a list of nodes. ``type_ignores`` is a list of :class:`TypeIgnore`
+   indicating the lines on which ``type: ignore`` comments are present. If type
+   comments are not stored in the ast it is an empty list.
+
+   .. versionchanged:: 3.8
+
+      ``type_ignores`` was introduced in Python 3.8 and is mandatory when manually
+      creating a :class:`Module`
+
+.. class:: Interactive(stmt* body)
+
+   The root of the AST for single statements or expressions parsed using the
+   `single` mode. The ``body`` attribute is a list of nodes.
+
+.. class:: Expression(expr body)
+
+   The root of the AST for single expressions parsed using the `eval` mode.
+   The ``body`` attribute is a single node, such as :class:`ast.Call` or
+   :class:`ast.BinOp`. This is different from :class:`ast.Expr`, which holds an
+   expression within an AST.
