@@ -12,7 +12,7 @@ on the right, and an :class:`Add` operator.
 Literals
 --------
 
-.. class:: Constant(value)
+.. class:: Constant(value, kind)
 
    .. versionadded:: 3.6
 
@@ -21,8 +21,15 @@ Literals
    immutable container types (tuples and frozensets) if all of their elements
    are constant.
 
+   ``kind`` is ``'u'`` for strings with a ``u`` prefix, and ``None`` otherwise,
+   allowing tools to distinguish ``u"a"`` from ``"a"``.
+
    This class is available in the :mod:`ast` module from Python 3.6,
    but it isn't produced by parsing code until Python 3.8.
+
+   .. versionchanged:: 3.8
+
+      The ``kind`` field was added.
 
 .. class:: Num(n)
 
